@@ -1,4 +1,6 @@
 import sqlite3
+import os
 
 def get_connection():
-    return sqlite3.connect("lib/db/database.db")
+    db_path = os.path.join(os.path.dirname(__file__), "database.db")
+    return sqlite3.connect(db_path)

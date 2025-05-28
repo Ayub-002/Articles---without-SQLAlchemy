@@ -1,16 +1,18 @@
-# scripts/setup_db.py
-
 import sqlite3
-from pathlib import Path
+from lib.db.connection import get_connection
+from lib.db.seed import seed_data
 
-def setup_database():
-    schema_path = Path(__file__).parent.parent / "lib" / "db" / "schema.sql"
-    db_path = Path(__file__).parent.parent / "lib" / "db" / "database.db"
+def setup_db():
+    conn = get_connection()
+    cursor = conn.cursor()
 
-    with sqlite3.connect(db_path) as conn:
-        with open(schema_path) as f:
-            conn.executescript(f.read())
-        print("✅ Database schema has been set up.")
+    with open('lib/db/schema.sql', 'r') as f:
+        cursor.executescript(f.read())
+
+    conn.commit()
+    conn.close()
+
+    seed_data()
 
 if __name__ == "__main__":
-    setup_database()
+    setup_db()
